@@ -74,6 +74,13 @@ spotify.search({ type: 'track', query: item }, function(err, data) {
   }
 });
 
+function movieSearch(){
+    axios.get("http://www.omdbapi.com/?t=" + item + "&apikey=trilogy")
+    .then(function(response) {
+        console.log(`Movie title: ${response.data.title}`);
+    })
+}
+
   
 
 
