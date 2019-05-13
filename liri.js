@@ -7,13 +7,12 @@ const keys = require("./keys.js");
 var Spotify = require('node-spotify-api')
 var spotify = new Spotify(keys.spotify)
 
-let omdb = (keys.omdb)
-
 let term = process.argv[2]
 let item = process.argv.slice(3).join(' ')
 
 //Switch case 
 function commands(term, item) {
+   // console.log(term);
     switch (term) {
         case "concert-this":
             concertThis();
@@ -34,20 +33,19 @@ function commands(term, item) {
 
 }
 
-commands(term, item);
-/*
 function concertThis() {
     var part1 = "https://rest.bandsintown.com/artists/"
     var part2 = "/events?app_id=codingbootcamp"
     var URL = part1 + item + part2
-    axios.get(URL).then(function (response, error) {
-    if (!error && response.statusCode === 200)
-    var jsonData = response.data
-
-    console.log('Venue: ' + jsonData.url,)
+    axios.get(URL).then(function (response) {
+        var jsonData = response.data
+        // console.log(jsonData[0]);
+        console.log('Venue: ' + jsonData[0].venue.name);
+        console.log('Venue location: ' + jsonData[0].venue.city);
+        console.log('Venue location: ' + jsonData[0].datetime); 
     })
-};
-*/
+ };
+
 function spotifySong(){
     if (!term) {
         term = "the sign ace of base"
@@ -56,8 +54,9 @@ spotify.search({ type: 'track', query: item }, function(err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-    for (var j = 0; j < data.tracks.items[0].album.artists.length; j++) {
-        console.log("Artist(s): " + data.tracks.items[0].album.artists[j].name);
+//ADJUST FOR LOOP 
+    // for (var j = 0; j < data.tracks.items[0].album.artists.length; j++) {
+        console.log("Artist(s): " + data.tracks.items[0].album.artists[0].name);
         console.log("Song: " + data.tracks.items[0].name);
         console.log("Song Link: " + data.tracks.items[0].external_urls.spotify);
         console.log("Album: " + data.tracks.items[0].album.name);
@@ -70,18 +69,25 @@ spotify.search({ type: 'track', query: item }, function(err, data) {
             \nAlbum: ${data.tracks.items[i].album.name}
             \nSpotify link: ${data.tracks.items[i].external_urls.spotify}\n\n - - - - -`)
    */
-  console.log(data); 
-  }
+  
 });
-
+}
 function movieSearch(){
+   // console.log("function called");
     axios.get("http://www.omdbapi.com/?t=" + item + "&apikey=trilogy")
     .then(function(response) {
-        console.log(`Movie title: ${response.data.title}`);
+        console.log(response.data.Title);
+        console.log(response.data.Year);
+        console.log(response.data.Ratings.Value);
+        console.log(response.data.Country);
+        console.log(response.data.Language);
+        console.log(response.data.Plot);
+        console.log(response.data.Actors);
     })
 }
 
-  
+
+commands(term, item);
 
 
     /*
@@ -113,4 +119,3 @@ function movieSearch(){
 // "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"`
 */
 
-}
